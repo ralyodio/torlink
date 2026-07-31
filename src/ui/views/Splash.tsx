@@ -11,7 +11,10 @@ const CATEGORIES = sourcesByGroup()
   .map((g) => g.group.toLowerCase())
   .join(`  ${ICON.dot}  `);
 
-export function Splash({ updateVersion }: { updateVersion?: string | null } = {}) {
+export function Splash({
+  updateVersion,
+  recovered,
+}: { updateVersion?: string | null; recovered?: boolean } = {}) {
   const { submitQuery, quitAll, cols, rows } = useStore();
   const { isRawModeSupported } = useStdin();
 
@@ -33,6 +36,9 @@ export function Splash({ updateVersion }: { updateVersion?: string | null } = {}
       alignItems="center"
     >
       <UpdateBanner latest={updateVersion ?? null} />
+      {recovered ? (
+        <Text dimColor>{`↻ recovered from a crashed start · downloads paused`}</Text>
+      ) : null}
       {showLogo ? (
         <Logo />
       ) : (
@@ -54,6 +60,7 @@ export function Splash({ updateVersion }: { updateVersion?: string | null } = {}
           editing
           placeholder="Search or paste a magnet link…"
           onSubmit={submitQuery}
+          onExitDown={() => submitQuery("")}
         />
       </Box>
       <Box marginTop={1}>
@@ -61,8 +68,7 @@ export function Splash({ updateVersion }: { updateVersion?: string | null } = {}
           <Text color={COLOR.alt}>↵</Text>
           <Text dimColor> search</Text>
           <Text dimColor>{`  ${ICON.dot}  `}</Text>
-          <Text dimColor>empty </Text>
-          <Text color={COLOR.alt}>↵</Text>
+          <Text color={COLOR.alt}>⇥</Text>
           <Text dimColor> browse</Text>
           <Text dimColor>{`  ${ICON.dot}  `}</Text>
           <Text color={COLOR.alt}>^c</Text>
